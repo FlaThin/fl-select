@@ -1,0 +1,47 @@
+.select-input-custom {
+  background-color: #0000;
+  border: none;
+  flex: auto;
+}
+
+.select-input-custom:focus-within {
+  outline: none;
+}
+
+.input-wrapper-custom {
+  background-color: #fff;
+  border-radius: 12px;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 12px;
+  display: flex;
+}
+
+.input-container-custom {
+  background-color: #f3f3f3;
+  border-radius: 16px;
+  padding: 5px;
+  display: flex;
+}
+
+.select-container-custom {
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+}
+
+.select-wrapper-option-custom {
+  background-color: #f3f3f3;
+  border-radius: 16px;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+  display: flex;
+}
+
+.select-option-custom {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 14px 12px;
+}
+/*# sourceMappingURL=index.77c898b7.css.map */
