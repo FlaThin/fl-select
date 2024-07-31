@@ -1,9 +1,14 @@
 export interface SelectProps {
     selector: string | HTMLElement,
-    url: string,
+    request: {
+        url: string,
+        headers?: any,
+    },
     placeHolder: string,
     templateOption: string,
     onSelect?: (itemSelect?: Option) => void;
+    
+
 }
 
 export interface Option {
@@ -24,7 +29,11 @@ export interface BaseSelect {
     options: Option[]
     timeout?: number;
     templateOption: string,
-    url: string
+    request: {
+        url: string,
+        headers?: any
+    }
+    
     onSelect?: (itemSelect: Option) => void,
 }
 

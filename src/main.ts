@@ -1,6 +1,7 @@
 import { BaseAction, BaseSelect, Option, SelectProps } from "./types";
 import { createHTMLElement } from "./utils/create-element";
 import { replaceTemplate } from "./utils/replace-template";
+import './styles/input.css'
 
 class Select implements BaseSelect {
   action: BaseAction;
@@ -12,22 +13,23 @@ class Select implements BaseSelect {
   inputContainer: HTMLElement;
   placeHolder: string;
   timeout?: number
-  url: string;
   options: Option[];
   templateOption: string;
   optionsWrapper: HTMLElement;
+  request: { url: string; headers?: any; };
   onSelect?: (itemSelect?: Option) => void;
+
 
 
   constructor({
     selector,
-    url,
+    request,
     placeHolder,
     templateOption,
     onSelect
   }: SelectProps) {
     this.container = document.querySelector(`${selector}`);
-    this.url = url;
+    this.request.url = request.url;
     this.options = [];
     this.templateOption = templateOption;
     this.onSelect = onSelect;
@@ -52,15 +54,25 @@ class Select implements BaseSelect {
     }
 
     this.timeout = setTimeout(async () => {
-      try {
-        const data = await simulateRequest(this.url);
+      const { url, headers } = this.request;
 
-        data.forEach(option => {
+      try {
+        const request = await fetch(url, {
+          body: JSON.stringify({
+            Text: value
+          }),
+          headers: headers
+          
+        });
+
+        const response = await request.json();
+
+        response.forEach(option => {
           this.createOptions(option)
         });
-        
+
       } catch (error) {
-        console.error(error.message); 
+        console.error(error.message);
       }
 
     }, 500);
@@ -77,10 +89,10 @@ class Select implements BaseSelect {
 
     optionElement.addEventListener("click", () => {
 
-      if(this.onSelect) this.onSelect(option);
+      if (this.onSelect) this.onSelect(option);
     })
-    
-    const contentReplace = replaceTemplate({template: this.templateOption, values: option});
+
+    const contentReplace = replaceTemplate({ template: this.templateOption, values: option });
 
     optionElement.innerHTML = contentReplace;
 
@@ -129,49 +141,4 @@ class Select implements BaseSelect {
     this.container?.append(this.inputContainer, this.optionsWrapper);
     this.container?.classList.add("select-container-custom")
   }
-
 }
-
-type returnData = {
-  id: string,
-  title: string,
-  status: string,
-}
-
-const fictionalData: returnData[] = [
-  { id: "asfedbs", title: 'Coca', status: 'success' },
-  { id: "asfdbs", title: 'Pepsi', status: 'waiting' },
-  { id: "asf111bs", title: 'Guaraná', status: 'inactive' },
-];
-
-async function simulateRequest(url: string) {
-
-  return new Promise<returnData[]>((resolve, reject) => {
-    setTimeout(() => {
-      const sucesso = Math.random() < 0.8; 
-
-      if (sucesso) {
-        resolve(fictionalData);
-      } else {
-        reject(new Error(`Falha na requisição para ${url}`));
-      }
-    }, 1000); 
-  });
-}
-
-
-const select = new Select({
-  selector: "#id",
-  url: "sim",
-  placeHolder: "Busque por uma marca",
-  templateOption: "<div>{title}</div>",
-  onSelect: (option) => {
-    
-  }
-});
-
-
-
-
-
-
